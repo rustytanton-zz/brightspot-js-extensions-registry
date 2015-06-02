@@ -1,0 +1,1 @@
+# brightspot-js-extensions-registry

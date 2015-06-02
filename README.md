@@ -69,7 +69,6 @@ This works fine most of the time, but managing changes to the init code manually
     require(['main','ext1','ext2'], function(main, ext1, ext2) {
       Object.create(main).init([ext1, ext2]);
     });
-    
     /** result in console: init, ext1, ext2, ready */
 
 If you wanted to change ext1 to execute asynchronously, you don't have to make any changes to the main file or other extensions. You can just modify ext1:
@@ -84,56 +83,54 @@ If you wanted to change ext1 to execute asynchronously, you don't have to make a
         }
       };
     });
-    
     /** result in console: init, ext2, ext1, ready */
 
 You can also make extensions dependent on other extensions:
 
-  define('ext1', function() {
-    return {
-      name: 'ext1',
-      init: function(obj, deferred) {
-        console.log('ext1');
-        $.when( obj.extensions.extensionReady('ext2') ).then(function() {
-          console.log(obj.setByExt2); deferred.resolve();
-        });
-      }
-    };
-  });
-  
-  define('ext2', function() {
-    return {
-      name: 'ext2',
-      init: function(obj, deferred) {
-        console.log('ext2');
-        obj.setByExt2 = 'setByExt2'; deferred.resolve();
-      }
-    };
-  });
+      define('ext1', function() {
+        return {
+          name: 'ext1',
+          init: function(obj, deferred) {
+            console.log('ext1');
+            $.when( obj.extensions.extensionReady('ext2') ).then(function() {
+              console.log(obj.setByExt2); deferred.resolve();
+            });
+          }
+        };
+      });
+      define('ext2', function() {
+        return {
+          name: 'ext2',
+          init: function(obj, deferred) {
+            console.log('ext2');
+            obj.setByExt2 = 'setByExt2'; deferred.resolve();
+          }
+        };
+      });
   
   /** result in console: init, ext1, ext2, setByExt2, ready */
   
 You can chain multiple registries together to allow groups of extensions to be executed after other groups of extensions are loaded:
 
-  define(['jquery','bsp-extensions-registry'], 'main', function($, registry) {
-    return {
-      init: function(extensions1, extensions2) {
-        var self = this;
-        this.extensions1 = Object.create(registry).init({
-          baseObject: this,
-          extensions: extensions1
-        });
-        this.extensions2 = Object.create(registry);
-        $.when(this.extensions1.ready).then(function() {
-          self.extensions2.init({
-            baseObject: self,
-            extensions: extensions2
-          });
-          $.when(self.extensions2.ready).then(function() {
-            console.log('ready');
-          });
-        });
-        console.log('init');
-      }
-    };
-  });
+      define(['jquery','bsp-extensions-registry'], 'main', function($, registry) {
+        return {
+          init: function(extensions1, extensions2) {
+            var self = this;
+            this.extensions1 = Object.create(registry).init({
+              baseObject: this,
+              extensions: extensions1
+            });
+            this.extensions2 = Object.create(registry);
+            $.when(this.extensions1.ready).then(function() {
+              self.extensions2.init({
+                baseObject: self,
+                extensions: extensions2
+              });
+              $.when(self.extensions2.ready).then(function() {
+                console.log('ready');
+              });
+            });
+            console.log('init');
+          }
+        };
+      });

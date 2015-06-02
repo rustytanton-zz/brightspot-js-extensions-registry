@@ -107,8 +107,7 @@ You can also make extensions dependent on other extensions:
           }
         };
       });
-  
-  /** result in console: init, ext1, ext2, setByExt2, ready */
+    /** result in console: init, ext1, ext2, setByExt2, ready */
   
 You can chain multiple registries together to allow groups of extensions to be executed after other groups of extensions are loaded:
 

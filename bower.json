@@ -1,0 +1,21 @@
+{
+  "authors": [
+    {
+      "homepage": "http://www.perfectsensedigital.com/",
+      "name": "Perfect Sense Digital"
+    }
+  ],
+  "dependencies": {
+    "jquery": ">=1.7.0"
+  },
+  "homepage": "https://github.com/perfectsense/brightspot-js-extensions-registry",
+  "ignore": ["demo","Gruntfile.js","package.json",".gitignore"],
+  "keywords": [
+    "brightspot",
+    "jquery"
+  ],
+  "license": "MIT",
+  "main": ["bsp-extensions-registry.js"],
+  "name": "bsp-extensions-registry",
+  "version": "0.0.1"
+}
